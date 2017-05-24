@@ -6,6 +6,7 @@ from prompt_toolkit.completion import Completion
 from typing import List
 from glob import iglob
 import itertools
+import os
 # from main import curr
 
 sql_commands = {
@@ -234,8 +235,9 @@ sql_functions = {
 
 def file_completions(document: Document) -> List[Completion]:
     nodes = itertools.chain(iglob('./*'), iglob('*'))
-    completions = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="file") for i in nodes]
-    return completions
+    files = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="file") for i in nodes if os.path.isfile(i)]
+    dirs = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="dir") for i in nodes if os.path.isdir(i)]
+    return files + dirs
 
 
 def sql_completions(document: Document) -> List[Completion]:
