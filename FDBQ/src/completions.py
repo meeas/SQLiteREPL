@@ -4,7 +4,6 @@
 from prompt_toolkit.document import Document
 from prompt_toolkit.completion import Completion
 from typing import List
-import os
 from glob import iglob
 import itertools
 # from main import curr
@@ -233,17 +232,9 @@ sql_functions = {
     'ZEROBLOB('}
 
 
-def dir_completions(document: Document) -> List[Document]:
-    nodes = itertools.chain(iglob('./*'), iglob('*'))
-    dirs = filter(os.path.isdir, nodes)
-    completions = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="dir") for i in dirs]
-    return completions
-
-
 def file_completions(document: Document) -> List[Completion]:
     nodes = itertools.chain(iglob('./*'), iglob('*'))
-    files = filter(os.path.isfile, nodes)
-    completions = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="file") for i in files]
+    completions = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="file") for i in nodes]
     return completions
 
 

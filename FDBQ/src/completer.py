@@ -21,7 +21,7 @@ class MyCustomCompleter(Completer):
                         yield i
 
                 for i in sql_completions(document):
-                    if i.text.startswith(curr_word.upper()):
+                    if i.text.startswith(curr_word.upper()) or i.text.startswith(curr_word):
                         yield i
 
 
