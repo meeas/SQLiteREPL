@@ -4,7 +4,7 @@
 import sqlite3
 import os.path
 
-db_path = os.path.expanduser("~/.db")
+db_path = os.path.expanduser("~/.sqlite")
 conn = sqlite3.connect(db_path)
 curr = conn.cursor()
 query = curr.execute
