@@ -7,20 +7,20 @@ from typing import List
 import os
 from glob import iglob
 import itertools
+# from main import curr
 
-sql = {
+sql_commands = {
     'ABORT',
-    'ABS(',
     'ACTION',
     'ADD',
     'AFTER',
     'ALL',
     'ALTER TABLE',
-    'ALTER',
+    'ALTER DATABASE',
     'AND',
     'ASC',
+    'ANALYZE',
     'ATTACH DATABASE',
-    'ATTACH',
     'AUTOINCREMENT',
     'BEFORE',
     'BEGIN TRANSACTION',
@@ -30,14 +30,10 @@ sql = {
     'CASCADE',
     'CASE',
     'CAST',
-    'CHANGES()',
-    'CHAR(',
     'CHECK',
-    'COALESCE(',
     'COLLATE',
     'COLUMN',
     'COMMIT TRANSACTION',
-    'COMMIT',
     'CONFLICT',
     'CONSTRAINT',
     'CREATE INDEX',
@@ -45,7 +41,6 @@ sql = {
     'CREATE TRIGGER',
     'CREATE VIEW',
     'CREATE VIRTUAL TABLE',
-    'CREATE',
     'CROSS',
     'CURRENT_DATE',
     'CURRENT_TIME',
@@ -62,7 +57,6 @@ sql = {
     'DROP TABLE',
     'DROP TRIGGER',
     'DROP VIEW',
-    'DROP',
     'EACH',
     'ELSE',
     'END',
@@ -72,29 +66,22 @@ sql = {
     'EXISTS',
     'EXPLAIN',
     'FAIL',
-    'FLOAT',
     'FOR',
     'FOREIGN',
     'FROM',
     'FULL',
-    'GLOB(',
-    'GROUP',
+    'GROUP BY',
     'HAVING',
-    'HEX(',
     'IF',
-    'IFNULL(',
     'IGNORE',
     'IMMEDIATE',
     'IN',
     'INDEX',
     'INDEXED BY',
-    'INDEXED',
     'INITIALLY',
     'INNER',
     'INSERT INTO',
-    'INSERT',
     'INSTEAD',
-    'INSTR(',
     'INTERSECT',
     'INTO',
     'IS',
@@ -103,27 +90,21 @@ sql = {
     'KEY',
     'LAST_INSERT_ROWID()',
     'LEFT',
-    'LENGTH(',
-    'LIKE',
     'LIKELIHOOD(',
     'LIKELY(',
     'LIMIT',
-    'LOWER(',
     'MATCH',
-    'MAX(',
-    'MIN(',
     'NATURAL',
     'NO',
     'NOT',
     'NOTNULL',
-    'NULL',
     'NULLIF(',
     'OF',
     'OFFSET',
     'ON CONFLICT',
     'ON',
     'OR',
-    'ORDER',
+    'ORDER BY',
     'OUTER',
     'PLAN',
     'PRAGMA',
@@ -132,17 +113,12 @@ sql = {
     'QUERY',
     'QUOTE(',
     'RAISE',
-    'RANDOM()',
-    'RANDOMBLOB(',
     'RECURSIVE',
     'REFERENCES',
     'REGEXP',
     'REINDEX',
     'RELEASE SAVEPOINT',
-    'RELEASE',
     'RENAME',
-    'REPLACE',
-    'REPLACE(',
     'RESTRICT',
     'RIGHT',
     'ROLLBACK',
@@ -150,36 +126,110 @@ sql = {
     'SAVEPOINT',
     'SELECT',
     'SET',
-    'SOUNDEX(',
-    'SQLITE_COMPILEOPTION_GET(',
-    'SQLITE_COMPILEOPTION_USED(',
-    'SQLITE_SOURCE_ID()',
-    'SQLITE_VERSION()',
     'TABLE',
     'TEMP',
     'TEMPORARY',
-    'TEXT',
     'THEN',
     'TO',
-    'TOTAL_CHANGES()',
     'TRANSACTION',
     'TRIGGER',
-    'TYPEOF(',
-    'UNICODE(',
     'UNION',
     'UNIQUE',
-    'UNLIKELY(',
     'UPDATE',
-    'UPPER(',
     'USING',
     'VACUUM',
-    'VALUES',
+    'VALUES(',
     'VIEW',
     'VIRTUAL',
     'WHEN',
     'WHERE',
     'WITH',
-    'WITHOUT',
+    'WITHOUT'}
+
+sql_tables = {'sqlite_master'}
+
+sql_dtypes = {
+    'TEXT',
+    'INTEGER',
+    'NULL',
+    'BLOB',
+    'REAL'
+}
+
+sql_numeric = {
+    'NUMERIC'
+    'DECIMAL(10,5)',
+    'BOOLEAN',
+    'DATE',
+    'DATETIME'
+}
+
+sql_integer = {
+    'INT',
+    'MEDIUMINT',
+    'SMALLINT',
+    'BIGINT',
+    'INT2',
+    'INT8',
+    'TINYINT',
+    'UNSIGNED BIG INT'
+}
+
+sql_real = {
+    'DOUBLE',
+    'FLOAT',
+    'DOUBLE PRECISION'
+}
+
+sql_text = {
+    'CHARACTER(20)',
+    'VARCHAR(255)',
+    'VARYING CHARACTER(255)',
+    'NCHAR(255)',
+    'NATIVE CHARACTER(70)',
+    'CLOB',
+    'NVARCHAR(100)'
+}
+
+sql_functions = {
+    'ABS(',
+    'CHANGES(',
+    'CHAR(',
+    'COALESCE(',
+    'GLOB(',
+    'HEX(',
+    'IFNULL(',
+    'INSTR(',
+    'LAST_INSERT_ROWID(',
+    'LENGTH(',
+    'LIKE(',
+    'LIKELIHOOD(',
+    'LIKELY(',
+    'LOAD_EXTENSION(',
+    'LOWER(',
+    'LTRIM(',
+    'MAX(',
+    'MIN(',
+    'NULLIF(',
+    'PRINTF(',
+    'QUOTE(',
+    'RANDOM(',
+    'RANDOMBLOB(',
+    'REPLACE(',
+    'ROUND(',
+    'RTRIM(',
+    'SOUNDEX(',
+    'SQLITE_COMPILEOPTION_GET(',
+    'SQLITE_COMPILEOPTION_USED(',
+    'SQLITE_SOURCE_ID(',
+    'SQLITE_VERSION()',
+    'SUBSTR(',
+    'TOTAL_CHANGES(',
+    'TRIM(',
+    'TYPEOF(',
+    'UNICODE(',
+    'UNLIKELY(',
+    'UPPER(',
     'ZEROBLOB('}
 
 
@@ -198,4 +248,22 @@ def file_completions(document: Document) -> List[Completion]:
 
 
 def sql_completions(document: Document) -> List[Completion]:
-    return [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="SQL") for i in sql]
+    commands = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="command") for i in sql_commands]
+    tables = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="table") for i in sql_tables]
+    functions = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="function") for i in sql_functions]
+    dtypes = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="data type") for i in sql_dtypes]
+    numeric = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="numeric (alias)") for i in sql_numeric]
+    text = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="text (alias)") for i in sql_text]
+    real = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="real (alias)") for i in sql_real]
+    integer = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="integer (alias)") for i in sql_integer]
+    return commands + tables + functions + integer + numeric + real + text + dtypes
+
+

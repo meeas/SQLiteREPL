@@ -3,7 +3,6 @@
 
 import sqlite3
 import os.path
-from pprint import pprint
 
 db_path = os.path.expanduser("~/.db")
 conn = sqlite3.connect(db_path)
@@ -15,7 +14,7 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 from completer import MyCustomCompleter
-# from styling import custom_style, SqliteConsoleLexer, PygmentsLexer
+from styling import custom_style, SqlLexer, PygmentsLexer
 
 # initialise variables
 user_input = ""
@@ -25,17 +24,24 @@ history = InMemoryHistory()
 
 while user_input != 'exit':
     # offer suggestions from history from history
-    user_input = prompt('SQLite >> ',
-                        history=history,
-                        multiline=False,
-                        auto_suggest=AutoSuggestFromHistory(),
-                        completer=MyCustomCompleter())
-                        # style=custom_style,
-                        # lexer=PygmentsLexer(SqliteConsoleLexer),
+    try:
+        user_input = prompt('SQLite >> ',
+                            history=history,
+                            multiline=False,
+                            auto_suggest=AutoSuggestFromHistory(),
+                            lexer=PygmentsLexer(SqlLexer),
+                            style=custom_style,
+                            completer=MyCustomCompleter())
+    except EOFError as e:
+        break
+
     try:
         q = query(user_input)
         for i in q:
-            pprint(i)
+            for j in i:
+                print(j, end=" ")
+            print("")
+        print("")
 
     except sqlite3.Error as e:
         print("An error occurred:", e.args[0])
