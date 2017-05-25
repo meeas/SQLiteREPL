@@ -11,13 +11,16 @@ query = curr.execute
 
 import pandas
 
+pandas.reset_option('expand_frame_repr')
+pandas.set_option('max_colwidth', 160)
+pandas.set_option('max_rows', 9999)
+
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 from completer import MyCustomCompleter
 from styling import custom_style, SqlLexer, PygmentsLexer
-
 
 # initialise variables
 user_input = ""
