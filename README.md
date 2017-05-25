@@ -12,6 +12,7 @@
 #### Dependencies 
 
 - prompt-toolkit
+- pandas
 - python3
 
 ##### Related
