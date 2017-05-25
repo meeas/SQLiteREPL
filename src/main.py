@@ -38,7 +38,7 @@ while user_input != 'exit':
                             lexer=PygmentsLexer(SqlLexer),
                             style=custom_style,
                             completer=MyCustomCompleter())
-    except EOFError as e:
+    except (EOFError,KeyboardInterrupt) as e:
         break
 
     try:
