@@ -5,7 +5,14 @@
 
 
 
+> **NOTE** the database will be dropped in ~/.sqlite
+
 ------------------------------------------------------------------------
+
+#### Dependencies 
+
+- prompt-toolkit
+- python3
 
 ##### Related
 

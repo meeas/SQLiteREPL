@@ -9,12 +9,15 @@ conn = sqlite3.connect(db_path)
 curr = conn.cursor()
 query = curr.execute
 
+import pandas
+
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 from completer import MyCustomCompleter
 from styling import custom_style, SqlLexer, PygmentsLexer
+
 
 # initialise variables
 user_input = ""
@@ -37,11 +40,7 @@ while user_input != 'exit':
 
     try:
         q = query(user_input)
-        for i in q:
-            for j in i:
-                print(j, end=" ")
-            print("")
-        print("")
+        print(pandas.DataFrame(list(q)))
 
     except sqlite3.Error as e:
         print("An error occurred:", e.args[0])
