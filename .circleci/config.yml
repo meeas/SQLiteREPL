@@ -5,7 +5,8 @@ jobs:
     docker:
       - image: circleci/python:1.0
         steps:
-          - checkout
           - run: echo "hello world"
+          - run: echo "hello again"
+          #- checkout
 
 # vim: sw=2
