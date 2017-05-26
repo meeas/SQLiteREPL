@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import typing
-from typing import Tuple, Any, List, Callable, Iterable, Union
+from typing import Tuple, List, Callable, Iterable, Union
 import sqlite3
 from sqlite3 import Cursor, Connection
+from pandas import DataFrame
 import os
 from copy import copy
 from itertools import islice
 
-Row = Tuple[Union[str, float, int, None, bytes], ...]
-
+Row = Tuple[Union[str, float, int, None], ...]
 
 def connect(db_path: str) -> Tuple[Connection, Cursor, Callable]:
 
@@ -33,9 +33,7 @@ def quick_query(db_path: str, query_str: str) -> List[Row]:
 
     connection, cursor, query = connect(db_path)
 
-    query(query_str)
-
-    print(cursor.fetchall())
+    print(DataFrame(query(query_str).fetchall()))
 
     close_connection(connection)
 
@@ -48,29 +46,17 @@ def drop_table(db_path: str, table_name: str):
         print("An exception occured, it's likely that the table '{}' didn't exist.".format(table_name))
 
 
-def __determine_len(iterable: Iterable) -> int:
+def __determine_row_len(iterable: Iterable) -> int:
     return len(list(islice(iter(copy(iterable)), 0, 1))[0])
 
 
-def insert_rows(rows: Iterable[Row], table_name: str, db_path: str) -> bool:
+def create_table(rows: Iterable[Row], table_name: str, db_path: str) -> bool:
 
     connection, cursor, query = connect(db_path)
 
-    # temp string
-    q = ""
+    DataFrame(rows).to_sql(table_name, connection)
 
-    # add to it ?, for each item in each row
-    for i in range(__determine_len(rows) - 1):
-        q += "?,"
-        query_str = "INSERT INTO {} VALUES ({} ?)".format(table_name ,q)
-
-    try:
-        for row in rows:
-            query(query_str, row)
-        close_connection(connection)
-        return True
-    except:
-        return False
+    close_connection(connection)
 
 
 def wipe_table(db_path: str, table_name: str) -> bool:

@@ -1,18 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# AIM: index the whole file system starting from 'starting_location'
+# Row[name, mode, inode, device, nlinks, uid, gid, size, atime, mtime, ctime]
+
 import os
-import itertools
+from itertools import starmap
 from functools import reduce
 import operator
-from insertion import drop_table, insert_rows, quick_query
-
-raw = os.walk(os.path.expanduser('~'))
+from db import drop_table, connect, close_connection
+from pandas import DataFrame
 
 db_path = "~/.sqlite"
+starting_location = '~'
+cols = ["name", "mode", "inode", "device", "nlinks", "uid", "gid", "size", "atime", "mtime", "ctime"]
+
+# necessary as DataFrames print in the reverse order
+cols.reverse()
+
+connection, cursor, query = connect(db_path)
+
+raw = os.walk(os.path.expanduser(starting_location))
 
 # lists
-data = itertools.starmap(lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames], raw)
+data = starmap(lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames], raw)
 
 # flattened to 1 level
 data = reduce(operator.add, data)
@@ -21,22 +32,12 @@ data = reduce(operator.add, data)
 data = filter(os.path.isfile, data)
 
 # stats
-data = map(lambda node: tuple([node]) + os.stat(node), data)
+data = list(map(lambda f : os.stat(f) + tuple([f]), data))
 
-drop_table(db_path, 'nodes')
+drop_table(db_path, 'files')
 
-quick_query(db_path, "CREATE TABLE nodes( \
-            name TEXT NOT NULL PRIMARY KEY, \
-            mode INTEGER, \
-            inode INTEGER, \
-            device INTEGER, \
-            nlinks INTEGER, \
-            uid INTEGER, \
-            gid INTEGER, \
-            size INTEGER, \
-            atime INTEGER, \
-            mtime INTEGER, \
-            ctime INTEGER \
-            )")
+df = DataFrame(data, columns=cols)
 
-insert_rows(data, "nodes", db_path)
+df.to_sql(con=connection, name="files")
+
+close_connection(connection)

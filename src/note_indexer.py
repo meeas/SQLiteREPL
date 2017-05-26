@@ -6,7 +6,7 @@ import os
 import glob
 from re import findall, compile
 from collections import Counter
-from insertion import quick_query, drop_table
+from db import quick_query, drop_table
 
 drop_table('notes')
 

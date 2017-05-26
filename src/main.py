@@ -48,6 +48,7 @@ while user_input != 'exit':
     except sqlite3.Error as e:
         print("An error occurred:", e.args[0])
 
+
 conn.commit()
 curr.close()
 conn.close()
