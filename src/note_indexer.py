@@ -4,19 +4,17 @@
 
 import os
 import glob
-from re import findall, compile
+from re import compile
 from collections import Counter
-from db import quick_query, drop_table
+from db import drop_table, create_table
 
-drop_table('notes')
+notes_dir = os.path.expanduser("~/vimwiki")
 
-query("CREATE TABLE notes ( \
-      name TEXT, \
-      size INTEGER, \
-      atime INTEGER, \
-      mtime INTEGER, \
-      ctime INTEGER \
-)")
+db_path = '~/.sqlite'
+
+drop_table(db_path ,'notes')
+
+cols = ["name", "mode", "inode", "device", "nlinks", "uid", "gid", "size", "atime", "mtime", "ctime", 'text']
 
 word_counter = Counter()
 
@@ -24,10 +22,6 @@ filtered = filter(os.path.isfile ,glob.iglob(os.path.join(notes_dir ,"**"), recu
 
 filtered = filter(compile("((wiki)|(md)|(rst))$").search, filtered)
 
-for f in filtered:
-    text = open(f, 'r').read()
-    word_list = findall("\w{3,}", text)
-    word_counter.update(word_list)
+rows = list(map(lambda f: tuple([f]) + os.stat(f) + tuple([open(f).read()]) ,filtered))
 
-print(word_counter)
-
+create_table(rows, 'notes', db_path, cols)

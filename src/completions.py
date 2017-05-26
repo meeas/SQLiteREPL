@@ -138,7 +138,7 @@ sql_commands = {
     'UPDATE',
     'USING',
     'VACUUM',
-    'VALUES(',
+    'VALUES',
     'VIEW',
     'VIRTUAL',
     'WHEN',
@@ -203,6 +203,7 @@ sql_functions = {
     'LAST_INSERT_ROWID(',
     'LENGTH(',
     'LIKE(',
+    'LIKE',
     'LIKELIHOOD(',
     'LIKELY(',
     'LOAD_EXTENSION(',
@@ -221,24 +222,16 @@ sql_functions = {
     'SOUNDEX(',
     'SQLITE_COMPILEOPTION_GET(',
     'SQLITE_COMPILEOPTION_USED(',
-    'SQLITE_SOURCE_ID(',
+    'SQLITE_SOURCE_ID()',
     'SQLITE_VERSION()',
     'SUBSTR(',
-    'TOTAL_CHANGES(',
+    'TOTAL_CHANGES()',
     'TRIM(',
     'TYPEOF(',
     'UNICODE(',
     'UNLIKELY(',
     'UPPER(',
     'ZEROBLOB('}
-
-
-def file_completions(document: Document) -> List[Completion]:
-    nodes = itertools.chain(iglob('./*'), iglob('*'))
-    files = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="file") for i in nodes if os.path.isfile(i)]
-    dirs = [Completion(i, start_position=document.find_boundaries_of_current_word(WORD=True)[0], display_meta="dir") for i in nodes if os.path.isdir(i)]
-    return files + dirs
-
 
 def sql_completions(document: Document) -> List[Completion]:
     commands = [Completion(i, start_position=document.find_boundaries_of_current_word(

@@ -52,11 +52,11 @@ def __determine_len(iterable: Iterable) -> int:
     return len(list(islice(iter(copy(iterable)), 0, 1))[0])
 
 
-def create_table(rows: Iterable[Row], table_name: str, db_path: str) -> bool:
+def create_table(rows: Iterable[Row], table_name: str, db_path: str, col_names: list) -> bool:
 
     connection, cursor, query = connect(db_path)
 
-    DataFrame(rows).to_sql(table_name, connection)
+    DataFrame(rows, columns=col_names).to_sql(table_name, connection)
 
     close_connection(connection)
 
