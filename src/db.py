@@ -33,7 +33,9 @@ def quick_query(db_path: str, query_str: str) -> List[Row]:
 
     connection, cursor, query = connect(db_path)
 
-    print(DataFrame(query(query_str).fetchall()))
+    query(query_str)
+
+    print(cursor.fetchall())
 
     close_connection(connection)
 
@@ -46,7 +48,7 @@ def drop_table(db_path: str, table_name: str):
         print("An exception occured, it's likely that the table '{}' didn't exist.".format(table_name))
 
 
-def __determine_row_len(iterable: Iterable) -> int:
+def __determine_len(iterable: Iterable) -> int:
     return len(list(islice(iter(copy(iterable)), 0, 1))[0])
 
 
