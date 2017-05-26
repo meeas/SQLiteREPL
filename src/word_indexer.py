@@ -52,6 +52,8 @@ def gen_files(starting_point: Dir) -> Iterator[File]:
     return filtered
 
 # every row is (word: str, frequency: int, tag: str)
+
+
 def gen_rows() -> Generator[Row, None , None]:
 
 
@@ -90,7 +92,7 @@ def gen_rows() -> Generator[Row, None , None]:
 # initialise variables
 starting_dir = os.path.expanduser("~/vimwiki")
 
-db_path = os.path.expanduser("~/.sqlite")
+db_path = "~/.sqlite"
 
 query = connect(db_path)
 

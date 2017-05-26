@@ -3,22 +3,12 @@
 
 
 import os
-import sqlite3
 import glob
 from re import findall, compile
 from collections import Counter
+from insertion import quick_query, drop_table
 
-db_path = os.path.expanduser("~/.sqlite")
-connection = sqlite3.connect(db_path)
-cursor = connection.cursor()
-query = cursor.execute
-notes_dir = os.path.expanduser("~/vimwiki")
-
-try:
-    query("DROP TABLE notes")
-    print("Existing notes table deleted")
-except:
-    pass
+drop_table('notes')
 
 query("CREATE TABLE notes ( \
       name TEXT, \

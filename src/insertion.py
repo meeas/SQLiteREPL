@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import typing
-from typing import Tuple, Any, List, Callable, Iterable
+from typing import Tuple, Any, List, Callable, Iterable, Union
 import sqlite3
 from sqlite3 import Cursor, Connection
 import os
 from copy import copy
 from itertools import islice
 
-Row = Tuple[Any, ...]
+Row = Tuple[Union[str, float, int, None, bytes], ...]
 
 
 def connect(db_path: str) -> Tuple[Connection, Cursor, Callable]:
@@ -28,11 +28,14 @@ def close_connection(connection: Connection):
     connection.close()
 
 
+# performs the query quickly, saves the state and closes automatically
 def quick_query(db_path: str, query_str: str) -> List[Row]:
 
     connection, cursor, query = connect(db_path)
 
     query(query_str)
+
+    print(cursor.fetchall())
 
     close_connection(connection)
 
@@ -46,12 +49,10 @@ def drop_table(db_path: str, table_name: str):
 
 
 def __determine_len(iterable: Iterable) -> int:
-    return len(list(islice(copy(iterable), 0, 1))[0])
+    return len(list(islice(iter(copy(iterable)), 0, 1))[0])
 
 
 def insert_rows(rows: Iterable[Row], table_name: str, db_path: str) -> bool:
-
-    assert len(rows) > 0, "Length of passed rows is 0"
 
     connection, cursor, query = connect(db_path)
 
@@ -70,6 +71,7 @@ def insert_rows(rows: Iterable[Row], table_name: str, db_path: str) -> bool:
         return True
     except:
         return False
+
 
 def wipe_table(db_path: str, table_name: str) -> bool:
     try:

@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/Projects/FDBQ
+    docker:
+      - image: circleci/python:1.0
+        steps:
+          - checkout
+          - run: echo "hello world"
+
+# vim: sw=2
