@@ -9,9 +9,9 @@ from re import findall, compile
 from collections import Counter
 
 db_path = os.path.expanduser("~/.sqlite")
-conn = sqlite3.connect(db_path)
-curr = conn.cursor()
-query = curr.execute
+connection = sqlite3.connect(db_path)
+cursor = connection.cursor()
+query = cursor.execute
 notes_dir = os.path.expanduser("~/vimwiki")
 
 try:
@@ -40,3 +40,4 @@ for f in filtered:
     word_counter.update(word_list)
 
 print(word_counter)
+

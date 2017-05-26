@@ -7,29 +7,26 @@
 import os
 import itertools
 from functools import reduce
-import sqlite3
 import operator
+from insertion import connect, close_connection, drop_table
 
 raw = os.walk(os.path.expanduser('~'))
 
-lists = itertools.starmap(lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames], raw)
+# lists
+data = itertools.starmap(lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames], raw)
 
-flattened = reduce(operator.add, lists)
+# flattened to 1 level
+data = reduce(operator.add, data)
 
-flattened = filter(os.path.isfile, flattened)
+# filtered to files
+data = filter(os.path.isfile, data)
 
-details = map(lambda node: tuple([node]) + tuple(os.stat(node)), flattened)
+# stats
+data = map(lambda node: tuple([node]) + os.stat(node), data)
 
-db_path = os.path.expanduser("~/.sqlite")
-conn = sqlite3.connect(db_path)
-curr = conn.cursor()
-query = curr.execute
+connection, cursor, query = connect("~/.sqlite")
 
-try:
-    query("DROP TABLE nodes")
-    print("Existing nodes table deleted")
-except:
-    pass
+drop_table('nodes', cursor)
 
 query("CREATE TABLE nodes( \
         name TEXT NOT NULL PRIMARY KEY, \
@@ -45,10 +42,10 @@ query("CREATE TABLE nodes( \
         ctime INTEGER \
         )")
 
-for i in details:
-    query("INSERT INTO nodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", i)
+for i in data:
+    query('INSERT INTO nodes VALUES {}'.format(i))
 
-conn.commit()
-curr.close()
-conn.close()
+assert close_connection(connection)
+
+
 

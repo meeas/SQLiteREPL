@@ -40,35 +40,7 @@ Row = Tuple[Word, Frequency, Tag]
 #### BEGIN ####
 
 # sqlite connect
-def connect(db_path: File):
 
-    try:
-        conn = sqlite3.connect(db_path)
-        curr = conn.cursor()
-        query = curr.execute
-
-    except:
-        print('Something went wrong. Aborting.')
-        sys.exit()
-
-    # remove in case it exists
-    try:
-        query("DROP TABLE words")
-        print("Existing words table deleted")
-    except:
-        pass
-
-    # create
-    query("CREATE TABLE words ( \
-        word TEXT, \
-        frequency INTEGER, \
-        tag TEXT \
-    )")
-
-    return query
-
-
-# make sure they are files
 def gen_files(starting_point: Dir) -> Iterator[File]:
     # make recursive, use iglob for efficiency
     filtered = filter(os.path.isfile, glob.iglob(
@@ -121,8 +93,6 @@ starting_dir = os.path.expanduser("~/vimwiki")
 db_path = os.path.expanduser("~/.sqlite")
 
 query = connect(db_path)
-
-
 
 # iterate through files
 
