@@ -8,8 +8,7 @@ from textblob import TextBlob
 import re
 from re import compile
 from urllib.error import HTTPError, URLError
-
-
+from itertools import filterfalse
 import logging
 
 logging.basicConfig(
@@ -64,7 +63,7 @@ class Spider():
         l.info("max set to {}".format(max_entries))
         l.info("theme set to {}".format(theme))
 
-    def _validate_url(URL: str) -> bool:
+    def validate_url(URL: str) -> bool:
         if regex.search(URL):
             return True
         return False
@@ -77,7 +76,7 @@ class Spider():
         l.info('focus is ' + focus)
         l.info('Length of rows is {}'.format(len(self._rows)))
         l.info('Traversed URLs: {}'.format(self._traversed))
-        l.info('Length of traversed URLs: {}'.format(len(self._traversed)))
+        l.info('Traversed {} URLs'.format(len(self._traversed)))
         try:
             html = urlopen(focus).read()
         except (HTTPError,URLError):
@@ -116,11 +115,10 @@ class Spider():
                         links.append(anchors[i]['href'])
                 except (KeyError,ValueError):
                     l.debug('KeyError or ValueError occured when trying to access the href attribute')
-            l.info('Filtering links that don\'t start with "https?"')
-            links = filter(compile('^(https?)').search, links)
+            l.info('Filtering links using Django regexp and removing those already traversed')
+            links = filter(lambda link: link not in self._traversed and Spider.validate_url(link), links)
             l.info('Filtering links that end with ".zip" or ".rar"')
-            links = (link for link in links if not link.endswith('.zip') and not link.endswith('.rar'))
-            links = filter(lambda link: link not in self._traversed and link is not None, links)
+            links = filterfalse(compile('(\.((zip)|(rar)|(pdf)|(docx)))$').search, links)
             for url in links:
                 l.info('Appending {} to self._traversed'.format(focus))
                 self._traversed.append(url)
