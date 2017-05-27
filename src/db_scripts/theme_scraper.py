@@ -8,12 +8,12 @@ db_path = "~/.sqlite"
 
 cols = ["sent", "polarity", "subjectivity", "url"]
 
-starting_point = 'https://en.wikipedia.org/wiki/Donald_Trump'
+starting_point = 'https://en.wikipedia.org/wiki/Linux'
 
-spider = Spider(1000, 'Trump')
+spider = Spider(2000, 'linux')
 
-rows = spider.scrape(starting_point)
+rows = spider.breadth_first_scrape(starting_point)
 
 rows = spider.results
 
-create_table(rows, 'trump', db_path, cols, delete_existing=True)
+create_table(rows, 'linux', db_path, cols, delete_existing=True)
