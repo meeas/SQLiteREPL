@@ -8,7 +8,7 @@ import os
 from itertools import starmap
 from functools import reduce
 import operator
-from ..db import create_table
+from db import create_table
 
 db_path = "~/.sqlite"
 

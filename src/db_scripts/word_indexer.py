@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import os
 import sys
 
@@ -63,11 +62,7 @@ for word in word_counter:
 
 # we still don't have frequency
 
-
 # initialise variables
 starting_dir = os.path.expanduser("~/vimwiki")
 
-
 # iterate through files
-
-
