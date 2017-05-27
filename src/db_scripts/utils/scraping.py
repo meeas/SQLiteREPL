@@ -5,11 +5,33 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from typing import Tuple, List
 from textblob import TextBlob
+import re
 from re import compile
+from urllib.error import HTTPError, URLError
+
+
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(levelname)s: [%(asctime)s] [%(lineno)s] %(message)s.',
+    datefmt="%I:%M:%S")
+
+l = logging.getLogger()
 
 Entry = Tuple[str, float, float, str]
 
 punctuation = "£%$![]{}~#-+=>^&*`¬</"
+
+regex = compile(
+    r'^(?:http|ftp)s?://'  # http:// or https://
+    # domain...
+    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
+    r'localhost|'  # localhost...
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+    r'(?::\d+)?'  # optional port
+    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
 
 class Sanitizer():
     def __init__(self, text: str):
@@ -23,9 +45,7 @@ class Sanitizer():
         self._text = compile("\[\d+\]+").sub("", self._text)
 
     def _beautify(self):
-        self._text.replace("\n", " ")
-        self._text.replace("\t", " ")
-        self._text = compile(" {2,}").sub(" ", self._text)
+        self._text = compile("[\n\t ]{2,}").sub(" ", self._text)
 
     def sanitize(self):
         self._beautify()
@@ -40,38 +60,73 @@ class Spider():
         self._rows = []
         self._theme = theme
         self._traversed = []
+        l.info('Spider created')
+        l.info("max set to {}".format(max_entries))
+        l.info("theme set to {}".format(theme))
+
+    def _validate_url(URL: str) -> bool:
+        if regex.search(URL):
+            return True
+        return False
 
     def scrape(self, starting_point: str):
+        if len(self._rows) > self._max:
+            l.info('max is {} and there is {} entries. Returning'.format(self._max, len(self._rows)))
+            return
         focus = starting_point
-        html = urlopen(focus).read()
+        l.info('focus is ' + focus)
+        l.info('Length of rows is {}'.format(len(self._rows)))
+        l.info('Traversed URLs: {}'.format(self._traversed))
+        l.info('Length of traversed URLs: {}'.format(len(self._traversed)))
+        try:
+            html = urlopen(focus).read()
+        except (HTTPError,URLError):
+            l.debug('HTTPError or URLError occured when trying to request the html')
+            return
         soup = BeautifulSoup(html, 'html.parser')
         text = soup.get_text()
         blob = TextBlob(text)
+        l.info('Filtering too long sentences')
         sentences = filter(lambda sent: len(sent) < 1500, blob.sentences)
+        l.info('Looping through sentences, checking if they contain {}'.format(self._theme))
         for sent in sentences:
 
             if self._theme.lower() in sent.lower():
 
+                l.info('Adding an entry to self._rows')
+
                 self._add_entry(Sanitizer(sent.string).sanitize(), sent.polarity,
                                 sent.subjectivity, focus)
 
-        if text.count(self._theme) >= 7 and len(self._rows) < self._max:
+        matches = text.count(self._theme)
+
+        l.info('found {} matches in the content of {}'.format(matches, focus))
+
+        if matches > 5 and len(self._rows) < self._max:
             anchors = soup.find_all('a')
+            l.info('Parsed {} anchor tags'.format(len(anchors)))
             links = []
             for i in range(len(anchors)):
                 try:
-                    links.append(anchors[i]['href'])
-                    # links = [anchor['href'] for anchor in anchors]
-                except KeyError:
-                    pass
+                    anchor_text = anchors[i].get_text()
+                    if self._theme in anchor_text or \
+                            self._theme in anchors[i].parent.get_text() or \
+                            self._theme in anchors[i].parent.parent.get_text() or \
+                            self._theme in anchors[i].parent.parent.parent.get_text():
+                        links.append(anchors[i]['href'])
+                except (KeyError,ValueError):
+                    l.debug('KeyError or ValueError occured when trying to access the href attribute')
+            l.info('Filtering links that don\'t start with "https?"')
             links = filter(compile('^(https?)').search, links)
-            links = filter(lambda link: link not in self._traversed, links)
+            l.info('Filtering links that end with ".zip" or ".rar"')
+            links = (link for link in links if not link.endswith('.zip') and not link.endswith('.rar'))
+            links = filter(lambda link: link not in self._traversed and link is not None, links)
             for url in links:
+                l.info('Appending {} to self._traversed'.format(focus))
                 self._traversed.append(url)
-                try:
-                    return self.scrape(url)
-                except ValueError:
-                    pass
+                l.info('About to recurse by passing {}'.format(url))
+                self.scrape(url)
+        l.info('End of function reached, returning')
         return
 
     @property
