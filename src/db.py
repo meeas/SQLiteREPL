@@ -7,8 +7,11 @@ import sqlite3
 from sqlite3 import Cursor, Connection
 from pandas import DataFrame
 import os
-from copy import copy
-from itertools import islice
+from logging.config import dictConfig
+from os.path import expanduser
+from json import load
+
+dictConfig(load(open(expanduser('~/.python/logging.json'))))
 
 Row = Tuple[Union[str, float, int, None], ...]
 
@@ -23,9 +26,13 @@ def connect(db_path: str) -> Tuple[Connection, Cursor, Callable]:
     return (connection, cursor, cursor.execute)
 
 
-def close_connection(connection: Connection):
-    connection.commit()
-    connection.close()
+def close_connection(connection: Connection) -> bool:
+    try:
+        connection.commit()
+        connection.close()
+    except:
+        print("Something went wrong.")
+        return False
 
 
 # performs the query quickly, saves the state and closes automatically
@@ -40,34 +47,11 @@ def quick_query(db_path: str, query_str: str) -> List[Row]:
     close_connection(connection)
 
 
-def drop_table(db_path: str, table_name: str):
-    try:
-        quick_query(db_path, "DROP TABLE {};".format(table_name))
-        print("Existing {} table deleted".format(table_name))
-    except:
-        print("An exception occured, it's likely that the table '{}' didn't exist.".format(table_name))
-
-
-def __determine_len(iterable: Iterable) -> int:
-    return len(list(islice(iter(copy(iterable)), 0, 1))[0])
-
-
-def create_table(rows: Iterable[Row], table_name: str, db_path: str, col_names: list) -> bool:
+def create_table(rows: Iterable[Row], table_name: str, db_path: str, col_names: list, delete_existing=False) -> bool:
 
     connection, cursor, query = connect(db_path)
 
-    DataFrame(rows, columns=col_names).to_sql(table_name, connection)
+    DataFrame(rows, columns=col_names).to_sql(table_name, connection,
+                                              if_exists='replace' if delete_existing else 'fail')
 
     close_connection(connection)
-
-
-def wipe_table(db_path: str, table_name: str) -> bool:
-    try:
-        quick_query(db_path, "DELETE FROM {}".format(table_name))
-        return True
-    except:
-        print("An error occured. The table might not exist.")
-        return False
-
-
-

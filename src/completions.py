@@ -4,22 +4,18 @@
 from prompt_toolkit.document import Document
 from prompt_toolkit.completion import Completion
 from typing import List
-from glob import iglob
-import itertools
-import os
-# from main import curr
 
-sql_commands = {
+sql_keywords = {
     'ABORT',
     'ACTION',
     'ADD',
     'AFTER',
     'ALL',
-    'ALTER TABLE',
     'ALTER DATABASE',
+    'ALTER TABLE',
+    'ANALYZE',
     'AND',
     'ASC',
-    'ANALYZE',
     'ATTACH DATABASE',
     'AUTOINCREMENT',
     'BEFORE',
@@ -88,17 +84,14 @@ sql_commands = {
     'ISNULL',
     'JOIN',
     'KEY',
-    'LAST_INSERT_ROWID()',
     'LEFT',
-    'LIKELIHOOD(',
-    'LIKELY(',
+    'LIKE',
     'LIMIT',
     'MATCH',
     'NATURAL',
     'NO',
     'NOT',
     'NOTNULL',
-    'NULLIF(',
     'OF',
     'OFFSET',
     'ON CONFLICT',
@@ -109,9 +102,7 @@ sql_commands = {
     'PLAN',
     'PRAGMA',
     'PRIMARY',
-    'PRINTF(',
     'QUERY',
-    'QUOTE(',
     'RAISE',
     'RECURSIVE',
     'REFERENCES',
@@ -146,7 +137,7 @@ sql_commands = {
     'WITH',
     'WITHOUT'}
 
-sql_tables = {'sqlite_master'}
+sql_tables = {'sqlite_master', 'table_info'}
 
 sql_dtypes = {
     'TEXT',
@@ -183,12 +174,12 @@ sql_real = {
 
 sql_text = {
     'CHARACTER(20)',
+    'CLOB',
+    'NATIVE CHARACTER(70)',
+    'NCHAR(255)',
+    'NVARCHAR(100)'
     'VARCHAR(255)',
     'VARYING CHARACTER(255)',
-    'NCHAR(255)',
-    'NATIVE CHARACTER(70)',
-    'CLOB',
-    'NVARCHAR(100)'
 }
 
 sql_functions = {
@@ -196,14 +187,17 @@ sql_functions = {
     'CHANGES(',
     'CHAR(',
     'COALESCE(',
+    'DATE(',
     'GLOB(',
     'HEX(',
     'IFNULL(',
     'INSTR(',
+    'COUNT(',
+    'GROUP_CONCAT(',
     'LAST_INSERT_ROWID(',
+    'LAST_INSERT_ROWID()',
     'LENGTH(',
     'LIKE(',
-    'LIKE',
     'LIKELIHOOD(',
     'LIKELY(',
     'LOAD_EXTENSION(',
@@ -214,7 +208,10 @@ sql_functions = {
     'NULLIF(',
     'PRINTF(',
     'QUOTE(',
+    'QUOTE(',
     'RANDOM(',
+    'JULIANDAY(',
+    'DATETIME(',
     'RANDOMBLOB(',
     'REPLACE(',
     'ROUND(',
@@ -225,7 +222,9 @@ sql_functions = {
     'SQLITE_SOURCE_ID()',
     'SQLITE_VERSION()',
     'SUBSTR(',
+    'STRFTIME(',
     'TOTAL_CHANGES()',
+    'total('
     'TRIM(',
     'TYPEOF(',
     'UNICODE(',
@@ -234,8 +233,8 @@ sql_functions = {
     'ZEROBLOB('}
 
 def sql_completions(document: Document) -> List[Completion]:
-    commands = [Completion(i, start_position=document.find_boundaries_of_current_word(
-        WORD=True)[0], display_meta="command") for i in sql_commands]
+    keywords = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="keyword") for i in sql_keywords]
     tables = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="table") for i in sql_tables]
     functions = [Completion(i, start_position=document.find_boundaries_of_current_word(
@@ -250,6 +249,6 @@ def sql_completions(document: Document) -> List[Completion]:
         WORD=True)[0], display_meta="real (alias)") for i in sql_real]
     integer = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="integer (alias)") for i in sql_integer]
-    return commands + tables + functions + integer + numeric + real + text + dtypes
+    return keywords + tables + functions + integer + numeric + real + text + dtypes
 
 
