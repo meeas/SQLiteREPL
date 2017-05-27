@@ -87,10 +87,11 @@ class Spider():
         blob = TextBlob(text)
         l.info('Filtering too long sentences')
         sentences = filter(lambda sent: len(sent) < 1500, blob.sentences)
-        l.info('Looping through sentences, checking if they contain {}'.format(self._theme))
+        l.info('Looping through sentences, checking if they contain "{}"'.format(self._theme))
+
         for sent in sentences:
 
-            if self._theme.lower() in sent.lower():
+            if re.compile(".*" + self._theme.lower() + ".*", flags=re.IGNORECASE).search(str(sent)):
 
                 l.info('Adding an entry to self._rows')
 
@@ -101,7 +102,7 @@ class Spider():
 
         l.info('found {} matches in the content of {}'.format(matches, focus))
 
-        if matches > 5 and len(self._rows) < self._max:
+        if matches > 10 and len(self._rows) < self._max:
             anchors = soup.find_all('a')
             l.info('Parsed {} anchor tags'.format(len(anchors)))
             links = []
