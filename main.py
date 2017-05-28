@@ -3,8 +3,21 @@
 
 import sqlite3
 import os.path
+from argparse import ArgumentParser
 
-db_path = os.path.expanduser("~/.sqlite")
+parser = ArgumentParser()
+
+parser.add_argument('-d',
+                    '--database',
+                    '--db',
+                    dest='database',
+                    metavar='PATH',
+                    default='~/.sqlite')
+
+args = parser.parse_args()
+
+db_path = os.path.expanduser(args.database)
+
 conn = sqlite3.connect(db_path)
 curr = conn.cursor()
 query = curr.execute
