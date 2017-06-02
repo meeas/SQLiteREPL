@@ -4,6 +4,7 @@
 import sqlite3
 import os.path
 from argparse import ArgumentParser
+import re
 
 parser = ArgumentParser()
 
@@ -18,7 +19,12 @@ args = parser.parse_args()
 
 db_path = os.path.expanduser(args.database)
 
+def _regex(string: str, pattern: str) -> bool:
+    return bool(re.compile(pattern).fullmatch(string))
+
+
 conn = sqlite3.connect(db_path)
+conn.create_function("regex", 2, _regex)
 curr = conn.cursor()
 query = curr.execute
 
