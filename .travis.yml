@@ -8,7 +8,6 @@ python:
     - "3.6-dev"
     - "3.7-dev"
     - "nightly" 
-    - "pypy-5.3.1"
 
 # command to install dependencies
 install: 
@@ -18,7 +17,7 @@ install:
 
 # command to run tests
 script: 
-    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return * 
+    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return completer.py completions.py db.py styling.py indexfs
     - python -m unittest discover 
 
 # blocklist
