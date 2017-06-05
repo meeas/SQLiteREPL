@@ -16,54 +16,70 @@
 #     ctime: int]
 
 import os
+from typing import List, Tuple, Union, Iterable
 from itertools import starmap
 from functools import reduce
 import operator
-from db import SQLite
-from argparse import ArgumentParser
 
-parser = ArgumentParser()
+import sqlite3
+
+from db import SQLite
+from argparse import ArgumentParser, Namespace
+
+Entry = Tuple[Union[str, float, None, int], ...]
+
+parser: ArgumentParser = ArgumentParser()
 
 parser.add_argument('-d', '--database_location', default='~/.sqlite')
 
 parser.add_argument('-s', '--starting_location', default='~')
 
-args = parser.parse_args()
+args: Namespace = parser.parse_args()
 
-db_path = os.path.expanduser(args.database_location)
+db_path: str = os.path.expanduser(args.database_location)
 
-starting_location = os.path.expanduser(args.starting_location)
+starting_location: str = os.path.expanduser(args.starting_location)
 
-cols = ["name", "mode", "inode", "device", "nlinks", "uid", "gid", "size", "atime", "mtime", "ctime"]
+cols: List[str] = [
+    "name", "mode", "inode",
+    "device", "nlinks",
+    "uid", "gid", "size",
+    "atime", "mtime", "ctime"]
 
 # necessary as DataFrames print in the reverse order
 cols.reverse()
 
 cols = tuple(cols)
 
-raw = os.walk(starting_location)
+raw: List[Tuple[Union[str, int]]] = os.walk(starting_location)
 
 # lists
-data = starmap(lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames], raw)
+data: Iterable[List[Union[str, int]]] = starmap(
+    lambda dirpath, dirnames, filenames: [dirpath] + [os.path.join(dirpath, f) for f in filenames],
+    raw)
 
 # flattened to 1 level
-data = reduce(operator.add, data)
+data: List[str] = reduce(operator.add, data)
 
 # filtered to files
-data = filter(os.path.isfile, data)
+data: Iterable[str] = filter(os.path.isfile, data)
 
 # stats
-rows = list(map(lambda f : os.stat(f) + tuple([f]), data))
+rows: List[Entry] = list(map(lambda f: os.stat(f) + tuple([f]), data))
 
-db = SQLite()
+db: SQLite = SQLite()
 
 try:
     db.query('DROP TABLE files;')
-except:
+except sqlite3.Error as e:
     pass
 
+db.query(
+    'CREATE TABLE files (name TEXT, mode INTEGER, inode INTEGER, device INTEGER , nlinks INTEGER, uid INTEGER, '
+    'gid INTEGER, size INTEGER, atime INTEGER, mtime INTEGER, ctime INTEGER)')
+
 for col in cols:
-    db.query('CREATE TABLE files ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', col)
+    db.query('INSERT INTO files VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', col)
 
 db.close_connection()
 # vim: ft=python

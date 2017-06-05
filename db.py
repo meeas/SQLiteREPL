@@ -14,11 +14,12 @@ from typing import Tuple, Union
 
 Row = Tuple[Union[str, float, int, None], ...]
 
+
 def _regex(string: str, pattern: str) -> bool:
     return bool(re.compile(pattern).fullmatch(string))
 
 
-class SQLite():
+class SQLite:
     def __init__(self, db_path='~/.sqlite'):
         self._db: str = os.path.expanduser(db_path)
         self._connection: Connection = sqlite3.connect(self._db)
@@ -27,16 +28,17 @@ class SQLite():
 
     def close_connection(self) -> bool:
         try:
+
             self._connection.commit()
             self._connection.close()
             return True
-        except:
-            print("Something went wrong.")
+
+        except sqlite3.Error as e:
+            print(f"Something went wrong. {e}")
             return False
 
     # performs the query quickly, saves the state automatically
-    def query(self,
-              query_str: str,
+    def query(self, query_str: str,
               data: Tuple[Union[str, float, int, None], ...] = None,
               pprint_results=True,
               commit: bool = True):
@@ -58,7 +60,7 @@ class SQLite():
             return True
 
         except sqlite3.Error as e:
-			print(f'An error occurred: {e.args[0]}')
+            print(f'An error occurred: {e.args[0]}')
             return False
 
     @property
