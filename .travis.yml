@@ -4,7 +4,10 @@ cache:
     directories:
         - "$HOME/.pyenv"
 python:
-    - "3.6"
+    - "3.2"
+    - "3.3"
+    - "3.4"
+    - "3.5"
     - "3.6-dev"
     - "3.7-dev"
     - "nightly" 
@@ -18,14 +21,12 @@ install:
 
 # command to run tests
 script: 
-    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return * ./export/* utils/*
+    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return * 
     - python -m unittest discover 
 
 # blocklist
 branches: 
     only:
-        - feature
-    except:
         - master
 
 notifications:
