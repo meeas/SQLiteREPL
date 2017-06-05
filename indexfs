@@ -2,13 +2,24 @@
 # -*- coding: utf-8 -*-
 
 # AIM: index the whole file system starting from 'starting_location'
-# Row[name, mode, inode, device, nlinks, uid, gid, size, atime, mtime, ctime]
+#
+# Row[name: str,
+#     mode: int,
+#     inode: int,
+#     device: int,
+#     nlinks: int,
+#     uid: int,
+#     gid: int,
+#     size: int,
+#     atime: int,
+#     mtime: int,
+#     ctime: int]
 
 import os
 from itertools import starmap
 from functools import reduce
 import operator
-from db import create_table
+from db import SQLite
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
@@ -28,6 +39,8 @@ cols = ["name", "mode", "inode", "device", "nlinks", "uid", "gid", "size", "atim
 # necessary as DataFrames print in the reverse order
 cols.reverse()
 
+cols = tuple(cols)
+
 raw = os.walk(starting_location)
 
 # lists
@@ -42,6 +55,15 @@ data = filter(os.path.isfile, data)
 # stats
 rows = list(map(lambda f : os.stat(f) + tuple([f]), data))
 
-create_table(rows, 'files', db_path, cols, delete_existing=True)
+db = SQLite()
 
+try:
+    db.query('DROP TABLE files;')
+except:
+    pass
+
+for col in cols:
+    db.query('CREATE TABLE files ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', col)
+
+db.close_connection()
 # vim: ft=python
