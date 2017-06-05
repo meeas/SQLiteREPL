@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sqlite3
+from argparse import ArgumentParser, Namespace
+from completer import MyCustomCompleter
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.shortcuts import prompt
+from sqlite3 import Cursor, Connection
+from styling import custom_style, SqlLexer, PygmentsLexer
+from typing import Callable, Optional, Any, Tuple
 import os.path
-from argparse import ArgumentParser
+import pandas
+from pandas import DataFrame
 import re
+import sqlite3
 
 parser = ArgumentParser()
 
@@ -15,58 +24,49 @@ parser.add_argument('-d',
                     metavar='PATH',
                     default='~/.sqlite')
 
-args = parser.parse_args()
+args: Namespace = parser.parse_args()
 
-db_path = os.path.expanduser(args.database)
+db_path: str = os.path.expanduser(args.database)
+
 
 def _regex(string: str, pattern: str) -> bool:
-    return bool(re.compile(pattern).fullmatch(string))
+	return bool(re.compile(pattern).fullmatch(string))
 
 
-conn = sqlite3.connect(db_path)
+conn: Connection = sqlite3.connect(db_path)
 conn.create_function("regex", 2, _regex)
-curr = conn.cursor()
-query = curr.execute
-
-import pandas
+curr: Cursor = conn.cursor()
+query: Callable[[str, Optional[Tuple[Any, ...]]], None] = curr.execute
 
 pandas.reset_option('expand_frame_repr')
 pandas.set_option('max_colwidth', 160)
 pandas.set_option('max_rows', 9999)
 
-from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-
-from completer import MyCustomCompleter
-from styling import custom_style, SqlLexer, PygmentsLexer
-
 # initialise variables
-user_input = ""
+user_input: str = ""
 
 # used for fish-like history completion
-history = InMemoryHistory()
+history: InMemoryHistory = InMemoryHistory()
 
 while user_input != 'exit':
-    # offer suggestions from history from history
-    try:
-        user_input = prompt('SQLite >> ',
-                            history=history,
-                            multiline=False,
-                            auto_suggest=AutoSuggestFromHistory(),
-                            lexer=PygmentsLexer(SqlLexer),
-                            style=custom_style,
-                            completer=MyCustomCompleter())
-    except (EOFError,KeyboardInterrupt) as e:
-        break
+	# offer suggestions from history from history
+	try:
+		user_input: str = prompt('SQLite >> ',
+		                         history=history,
+		                         multiline=False,
+		                         auto_suggest=AutoSuggestFromHistory(),
+		                         lexer=PygmentsLexer(SqlLexer),
+		                         style=custom_style,
+		                         completer=MyCustomCompleter())
+	except (EOFError, KeyboardInterrupt) as e:
+		break
 
-    try:
-        q = query(user_input)
-        print(pandas.DataFrame(list(q)))
+	try:
+		q: str = query(user_input)
+		print(DataFrame(list(q)))
 
-    except sqlite3.Error as e:
-        print("An error occurred:", e.args[0])
-
+	except sqlite3.Error as e:
+		print("An error occurred:", e.args[0])
 
 conn.commit()
 curr.close()

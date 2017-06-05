@@ -9,6 +9,7 @@
 import os
 import re
 import sqlite3
+from sqlite3 import Connection, Cursor
 from typing import Tuple, Union
 
 Row = Tuple[Union[str, float, int, None], ...]
@@ -19,10 +20,10 @@ def _regex(string: str, pattern: str) -> bool:
 
 class SQLite():
     def __init__(self, db_path='~/.sqlite'):
-        self._db = os.path.expanduser(db_path)
-        self._connection = sqlite3.connect(self._db)
+        self._db: str = os.path.expanduser(db_path)
+        self._connection: Connection = sqlite3.connect(self._db)
         self._connection.create_function("regex", 2, _regex)
-        self._cursor = self._connection.cursor()
+        self._cursor: Cursor = self._connection.cursor()
 
     def close_connection(self) -> bool:
         try:
@@ -34,7 +35,11 @@ class SQLite():
             return False
 
     # performs the query quickly, saves the state automatically
-    def query(self, query_str: str, data=None, pprint_results=True, commit=True):
+    def query(self,
+              query_str: str,
+              data: Tuple[Union[str, float, int, None], ...] = None,
+              pprint_results=True,
+              commit: bool = True):
 
         try:
 
@@ -52,8 +57,8 @@ class SQLite():
                         print(row)
             return True
 
-        except Exception as e:
-            print(f"{e} occured.")
+        except sqlite3.Error as e:
+			print(f'An error occurred: {e.args[0]}')
             return False
 
     @property
