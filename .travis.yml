@@ -1,0 +1,32 @@
+sudo: false
+language: python
+cache:
+    directories:
+        - "$HOME/.pyenv"
+python:
+    - "3.6"
+    - "3.6-dev"
+    - "3.7-dev"
+    - "nightly" 
+    - "pypy-5.3.1"
+
+# command to install dependencies
+install: 
+    - "pip install -r requirements.txt"
+    - "pip install mypy"
+    
+
+# command to run tests
+script: 
+    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return * ./export/* utils/*
+    - python -m unittest discover 
+
+# blocklist
+branches: 
+    only:
+        - feature
+    except:
+        - master
+
+notifications:
+    email: true
