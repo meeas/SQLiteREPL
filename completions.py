@@ -232,6 +232,7 @@ sql_functions: Set[str] = {
     'UPPER(',
     'ZEROBLOB('}
 
+
 def sql_completions(document: Document) -> List[Completion]:
     keywords: List[Completion] = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="keyword") for i in sql_keywords]
@@ -243,12 +244,10 @@ def sql_completions(document: Document) -> List[Completion]:
         WORD=True)[0], display_meta="data type") for i in sql_dtypes]
     numeric: List[Completion] = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="numeric (alias)") for i in sql_numeric]
-    text : List[Completion]= [Completion(i, start_position=document.find_boundaries_of_current_word(
+    text: List[Completion] = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="text (alias)") for i in sql_text]
-    real : List[Completion]= [Completion(i, start_position=document.find_boundaries_of_current_word(
+    real: List[Completion] = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="real (alias)") for i in sql_real]
-    integer : List[Completion]= [Completion(i, start_position=document.find_boundaries_of_current_word(
+    integer: List[Completion] = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="integer (alias)") for i in sql_integer]
     return keywords + tables + functions + integer + numeric + real + text + dtypes
-
-

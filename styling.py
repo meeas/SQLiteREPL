@@ -3,8 +3,6 @@
 
 from pygments.token import Token
 from prompt_toolkit.styles import style_from_pygments
-from prompt_toolkit.layout.lexers import PygmentsLexer
-from pygments.lexers import SqlLexer
 from pygments.styles.tango import TangoStyle
 
 custom_style = style_from_pygments(TangoStyle, {
