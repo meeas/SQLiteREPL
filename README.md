@@ -11,8 +11,16 @@
 ![1](screens/1.png)
 ![2](screens/2.png)
 
+```sh
+usage: sqlite [-h] [-d PATH]
 
-**NOTE** the database will be dropped in ~/.sqlite
+optional arguments:
+  -h, --help            show this help message and exit
+  -d PATH, --database PATH, --db PATH
+```
+
+**NOTE**
+unless you specify the database location with `--database`, it will be dropped in ~/.sqlite
 
 ## Limitations
 
