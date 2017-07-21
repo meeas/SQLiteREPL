@@ -1,0 +1,61 @@
+Metadata-Version: 1.1
+Name: sqlite
+Version: 0.2.0
+Summary: re.compile("^# ?(?P<TITLE>.*?)$").search(long_description).group("TITLE")
+Home-page: https://github.com/nl253/SQLiteREPL
+Author: Norbert Logiewa
+Author-email: nl253@kent.ac.uk
+License: MIT
+Description: # SQLite Clinet written in python3
+        
+        **TODO**
+        - [ ] Screenshots
+        - [ ] Expand db.py
+        - [ ] Test db.py
+        
+        
+        ## Good completion
+        
+        ![1](screens/1.png)
+        ![2](screens/2.png)
+        
+        ```sh
+        usage: sqlite [-h] [-d PATH]
+        
+        optional arguments:
+          -h, --help            show this help message and exit
+          -d PATH, --database PATH, --db PATH
+        ```
+        
+        **NOTE**
+        unless you specify the database location with `--database`, it will be dropped in ~/.sqlite
+        
+        ## Limitations
+        
+        - Not context sensitive,
+        - doesn't complete table names
+        - relies on pandas for displaying data
+        
+        ------------------------------------------------------------------------
+        
+        #### Dependencies
+        
+        - [prompt-toolkit](https://github.com/jonathanslenders/python-prompt-toolkit)
+        - [pandas](https://pandas.pydata.org/)
+        - python3.6
+        
+        ##### Related
+        
+        -  [mycli](https://github.com/dbcli/mycli)
+        
+        
+        
+        
+Keywords: database sqllite db-clinet SQLite prompt-toolkit
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Database :: Front-Ends
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
