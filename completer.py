@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import shlex
 
 from prompt_toolkit.completion import Completer
 from prompt_toolkit.document import Document
 
-from completions import sql_completions
+from .completions import sql_completions
 
 
 class MyCustomCompleter(Completer):
