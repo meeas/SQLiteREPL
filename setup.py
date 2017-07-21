@@ -70,4 +70,4 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
         # https://packaging.python.org/en/latest/requirements.html
         install_requires=['pandas', 'prompt_toolkit'],
 
-        scripts=['main.py'])
+        scripts=['sqlite'])

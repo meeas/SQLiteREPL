@@ -73,3 +73,5 @@ while user_input != 'exit':
 conn.commit()
 curr.close()
 conn.close()
+
+# vim: ft=python
