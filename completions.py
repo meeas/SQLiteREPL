@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from prompt_toolkit.document import Document
-from prompt_toolkit.completion import Completion
 from typing import List
+
+from prompt_toolkit.completion import Completion
+from prompt_toolkit.document import Document
 
 sql_keywords = {
     'ABORT',
@@ -250,5 +251,3 @@ def sql_completions(document: Document) -> List[Completion]:
     integer = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="integer (alias)") for i in sql_integer]
     return keywords + tables + functions + integer + numeric + real + text + dtypes
-
-

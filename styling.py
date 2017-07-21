@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pygments.token import Token
-from prompt_toolkit.styles import style_from_pygments
 from prompt_toolkit.layout.lexers import PygmentsLexer
+from prompt_toolkit.styles import style_from_pygments
 from pygments.lexers import SqlLexer
 from pygments.styles.tango import TangoStyle
+from pygments.token import Token
 
 custom_style = style_from_pygments(TangoStyle, {
     Token.Comment:   '#888888 bold',

@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sqlite3
 import os.path
-from argparse import ArgumentParser
 import re
+import sqlite3
+from argparse import ArgumentParser
+
+import pandas
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.shortcuts import prompt
+
+from completer import MyCustomCompleter
+from styling import PygmentsLexer, SqlLexer, custom_style
 
 parser = ArgumentParser()
 
@@ -28,18 +36,12 @@ conn.create_function("regex", 2, _regex)
 curr = conn.cursor()
 query = curr.execute
 
-import pandas
 
 pandas.reset_option('expand_frame_repr')
 pandas.set_option('max_colwidth', 160)
 pandas.set_option('max_rows', 9999)
 
-from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
-from completer import MyCustomCompleter
-from styling import custom_style, SqlLexer, PygmentsLexer
 
 # initialise variables
 user_input = ""

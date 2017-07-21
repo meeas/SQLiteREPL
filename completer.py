@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import shlex
+
 from prompt_toolkit.completion import Completer
 from prompt_toolkit.document import Document
+
 from completions import sql_completions
+
 
 class MyCustomCompleter(Completer):
     def get_completions(self, document: Document, complete_event):
