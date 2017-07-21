@@ -2,7 +2,8 @@
 SQLite Clinet written in python3
 #################################
 
-**TODO**
+TODO
+----
 
 - [ ] Screenshots
 - [ ] Expand db.py
@@ -17,6 +18,7 @@ Good completion
    :scale: 50 %
    :alt: alternate text
    :align: center
+
 
 .. image:: screens/2.png
    :name: my picture
@@ -56,7 +58,5 @@ Dependencies
 Related
 -------
 
--  <https://github.com/dbcli/mycli>
-
-
+<https://github.com/dbcli/mycli>
 
