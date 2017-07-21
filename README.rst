@@ -25,16 +25,19 @@ Good completion
    :align: center
 
 
-```sh
-usage: sqlite [-h] [-d PATH]
+.. code-block:: sh
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -d PATH, --database PATH, --db PATH
-```
+	usage: sqlite [-h] [-d PATH]
 
-**NOTE**
-unless you specify the database location with `--database`, it will be dropped in ~/.sqlite
+	optional arguments:
+	-h, --help            show this help message and exit
+	-d PATH, --database PATH, --db PATH
+
+
+.. note::
+	unless you specify the database location with `--database`, it will
+	be dropped in ~/.sqlite
+
 
 Limitations
 -----------
@@ -46,14 +49,14 @@ Limitations
 Dependencies
 ------------
 
-- [prompt-toolkit](https://github.com/jonathanslenders/python-prompt-toolkit)
-- [pandas](https://pandas.pydata.org/)
+- `prompt-toolkit <https://github.com/jonathanslenders/python-prompt-toolkit>`__
+- `pandas <https://pandas.pydata.org/>`__
 - python3.6
 
 Related
 -------
 
--  [mycli](https://github.com/dbcli/mycli)
+-  <https://github.com/dbcli/mycli>
 
 
 
