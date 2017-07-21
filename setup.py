@@ -70,12 +70,4 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
         # https://packaging.python.org/en/latest/requirements.html
         install_requires=['pandas', 'prompt_toolkit'],
 
-        # To provide executable scripts, use entry points in preference to the
-        # "scripts" keyword. Entry points provide cross-platform support and allow
-        # pip to create the appropriate form of executable for the target platform.
-        entry_points={
-                'console_scripts': [
-                    'sample=sample:main',
-                    ],
-                },
-        )
+        scripts=['main.py'])
