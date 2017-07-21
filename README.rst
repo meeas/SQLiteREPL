@@ -1,15 +1,29 @@
-# SQLite Clinet written in python3
+#################################
+SQLite Clinet written in python3
+#################################
 
 **TODO**
+
 - [ ] Screenshots
 - [ ] Expand db.py
 - [ ] Test db.py
 
 
-## Good completion
+Good completion
+---------------
 
-![1](screens/1.png)
-![2](screens/2.png)
+.. image:: screens/1.png
+   :name: my picture
+   :scale: 50 %
+   :alt: alternate text
+   :align: center
+
+.. image:: screens/2.png
+   :name: my picture
+   :scale: 50 %
+   :alt: alternate text
+   :align: center
+
 
 ```sh
 usage: sqlite [-h] [-d PATH]
@@ -22,21 +36,22 @@ optional arguments:
 **NOTE**
 unless you specify the database location with `--database`, it will be dropped in ~/.sqlite
 
-## Limitations
+Limitations
+-----------
 
 - Not context sensitive,
 - doesn't complete table names
 - relies on pandas for displaying data
 
-------------------------------------------------------------------------
-
-#### Dependencies
+Dependencies
+------------
 
 - [prompt-toolkit](https://github.com/jonathanslenders/python-prompt-toolkit)
 - [pandas](https://pandas.pydata.org/)
 - python3.6
 
-##### Related
+Related
+-------
 
 -  [mycli](https://github.com/dbcli/mycli)
 
