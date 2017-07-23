@@ -63,4 +63,8 @@ setup(
 
     install_requires=['pandas', 'prompt_toolkit'],
 
-    scripts=['sqlite/main.py'])
+    entry_points={
+        'console_scripts': ['sqlite = sqlite.main:main']
+        })
+
+    scripts=['bin/funniest-joke'],
