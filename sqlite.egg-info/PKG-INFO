@@ -4,7 +4,7 @@ Version: 0.2.0
 Summary: SQLite Clinet written in python3
 Home-page: https://github.com/nl253/SQLiteREPL
 Author: Norbert Logiewa
-Author-email: nl253@kent.ac.uk
+Author-email: norbertlogiewa96\@gmail.com
 License: MIT
 Description: #################################
         SQLite Clinet written in python3
@@ -69,7 +69,7 @@ Description: #################################
         <https://github.com/dbcli/mycli>
         
         
-Keywords: database sqllite db-clinet SQLite prompt-toolkit
+Keywords: database sqllite3 sqlite clinet SQLite prompt-toolkit prompt_toolkit
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
