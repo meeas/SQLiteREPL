@@ -19,4 +19,8 @@ push:
 	git push origin dev
 
 dependencies:
-	pip install --user -r requirements.txt
+	pip install -r requirements.txt
+
+travis:
+	travis restart
+	travis logs
