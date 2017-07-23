@@ -18,6 +18,5 @@ push:
 	git commit -m 'Automaitc update.' 
 	git push origin dev
 
-
-	
-
+dependencies:
+	pip install --user -r requirements.txt
