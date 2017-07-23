@@ -28,6 +28,6 @@ branches:
         - master
 
 notifications:
-    email: true
+    email: false
 
 # vim: nowrap

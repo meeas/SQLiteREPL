@@ -59,7 +59,7 @@ def main():
                                 style=custom_style,
                                 completer=MyCustomCompleter())
 
-        except (EOFError,KeyboardInterrupt) as e:
+        except (EOFError, KeyboardInterrupt) as e:
             break
 
         try:
