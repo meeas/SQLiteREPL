@@ -12,9 +12,6 @@ from prompt_toolkit.shortcuts import prompt
 from .completer import MyCustomCompleter
 from .styling import PygmentsLexer, SqlLexer, custom_style
 
-from .db import SQLite
-
-
 def initialise_pandas():
 
     pandas.reset_option('expand_frame_repr')
@@ -42,13 +39,13 @@ def main():
 
     args = parse()
 
-    sqlite = SQLite(args.db_path)
+    connection: Connection = sqlite3.connect(args.database)
 
     # initialise variables
-    user_input = ""
+    user_input: str = ""
 
     # used for fish-like history completion
-    history = InMemoryHistory()
+    history: InMemoryHistory = InMemoryHistory()
 
     while user_input != 'exit':
 
@@ -66,13 +63,11 @@ def main():
             break
 
         try:
-            q = sqlite.query(user_input)
-            print(pandas.DataFrame(list(q)))
+            with connection:
+                print(pandas.DataFrame(list(connection.execute(user_input))))
 
-        except sqlite3.Error as e:
+        except (sqlite3.Error, sqlite3.IntegrityError) as e:
             print("An error occurred:", e.args[0])
-
-    sqlite.close_connection()
 
 
 if __name__ == '__main__':
