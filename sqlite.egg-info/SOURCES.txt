@@ -1,6 +1,11 @@
 README.rst
 setup.py
-sqlite
+sqlite/__init__.py
+sqlite/completer.py
+sqlite/completions.py
+sqlite/db.py
+sqlite/main.py
+sqlite/styling.py
 sqlite.egg-info/PKG-INFO
 sqlite.egg-info/SOURCES.txt
 sqlite.egg-info/dependency_links.txt

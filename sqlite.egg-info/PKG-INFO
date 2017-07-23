@@ -1,7 +1,7 @@
 Metadata-Version: 1.1
 Name: sqlite
 Version: 0.2.0
-Summary: re.compile("^# ?(?P<TITLE>.*?)$").search(long_description).group("TITLE")
+Summary: SQLite Clinet written in python3
 Home-page: https://github.com/nl253/SQLiteREPL
 Author: Norbert Logiewa
 Author-email: nl253@kent.ac.uk

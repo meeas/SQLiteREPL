@@ -28,7 +28,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
         # https://packaging.python.org/en/latest/single_source_version.html
         version='0.2.0',
 
-        description='re.compile("^# ?(?P<TITLE>.*?)$").search(long_description).group("TITLE")',
+        description='SQLite Clinet written in python3',
         long_description=long_description,
 
         # The project's main homepage.
