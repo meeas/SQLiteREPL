@@ -8,23 +8,26 @@ python:
     - "3.6"
     - "3.6-dev"
     - "3.7-dev"
-    - "nightly" 
+    - "nightly"
 
 # command to install dependencies
-install: 
+install:
     - "pip install -r requirements.txt"
     - "pip install mypy"
 
 # command to run tests
-script: 
-    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return sqlite/*.py 
+script:
+    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return sqlite/*.py
     - python -m unittest discover sqlite
+    - pip install --user git+https://github.com/nl253/SQLiteREPL.git@dev && sqlite
 
 # blocklist
-branches: 
+branches:
     only:
         - dev
         - master
 
 notifications:
     email: true
+
+# vim: nowrap
