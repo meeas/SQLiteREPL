@@ -9,10 +9,14 @@ help:
 	@echo '                                                                          '
 
 publish:
-	git add --update && git commit -m 'Automaitc update.' && git push origin master
+	git add --update
+	git commit -m 'Automaitc update.' 
+	git push origin master
 
 push:
-	git add --update && git commit -m 'Automaitc update.' && git push origin dev
+	git add --update 
+	git commit -m 'Automaitc update.' 
+	git push origin dev
 
 
 	
