@@ -7,9 +7,11 @@
 import os
 import re
 import sqlite3
-from typing import Tuple, Union
+from typing import Tuple, Union, Any
+
 
 Row = Tuple[Union[str, float, int, None], ...]
+
 
 def _regex(string: str, pattern: str) -> bool:
     return bool(re.compile(pattern).fullmatch(string))
@@ -17,22 +19,34 @@ def _regex(string: str, pattern: str) -> bool:
 
 class SQLite():
     def __init__(self, db_path='~/.sqlite'):
-        self._db = os.path.expanduser(db_path)
-        self._connection = sqlite3.connect(self._db)
+        self._location = os.path.expanduser(db_path)
+        self._connection = sqlite3.connect(self._location)
         self._connection.create_function("regex", 2, _regex)
         self._cursor = self._connection.cursor()
 
+    @property
+    def location(self) -> str:
+        return self._location
+
+
     def close_connection(self) -> bool:
         try:
-            self._connection.commit()
+            self.commit()
             self._connection.close()
             return True
         except:
             print("Something went wrong.")
             return False
 
+    def commit(self):
+        self._connection.commit()
+
     # performs the query quickly, saves the state automatically
-    def query(self, query_str: str, data=None, pprint_results=True, commit=True):
+    def query(self,
+            query_str: str,
+            pprint_results=True,
+            data=None,
+            commit=True):
 
         try:
 
@@ -42,7 +56,7 @@ class SQLite():
                 self._cursor.execute(query_str)
 
             if commit:
-                self._connection.commit()
+                self.commit()
 
             if pprint_results:
                 for row in self._cursor.fetchall():
