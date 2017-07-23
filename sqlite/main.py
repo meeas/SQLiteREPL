@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 
 import pandas
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
