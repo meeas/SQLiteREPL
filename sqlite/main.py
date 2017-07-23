@@ -36,12 +36,9 @@ conn.create_function("regex", 2, _regex)
 curr = conn.cursor()
 query = curr.execute
 
-
 pandas.reset_option('expand_frame_repr')
 pandas.set_option('max_colwidth', 160)
 pandas.set_option('max_rows', 9999)
-
-
 
 # initialise variables
 user_input = ""

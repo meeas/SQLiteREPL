@@ -64,5 +64,5 @@ setup(
     install_requires=['pandas', 'prompt_toolkit'],
 
     entry_points={
-        'console_scripts': ['sqlite = main:cli']
+        'console_scripts': ['sqlite = main']
         })
