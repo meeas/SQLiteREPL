@@ -1,0 +1,3 @@
+[console_scripts]
+sqlite = sqlite.main:main
+

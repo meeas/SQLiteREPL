@@ -1,45 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sqlite3
 from argparse import ArgumentParser, Namespace
-
 import pandas
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.shortcuts import prompt
+import os
 
-from .completer import MyCustomCompleter
-from .styling import PygmentsLexer, SqlLexer, custom_style
+pandas.reset_option('expand_frame_repr')
+pandas.set_option('max_colwidth', 160)
+pandas.set_option('max_rows', 9999)
 
-def initialise_pandas():
+parser: ArgumentParser = ArgumentParser()
 
-    pandas.reset_option('expand_frame_repr')
-    pandas.set_option('max_colwidth', 160)
-    pandas.set_option('max_rows', 9999)
+parser.add_argument('-d',
+                    '--database',
+                    '--db',
+                    dest='database',
+                    metavar='PATH',
+                    default='~/.sqlite')
 
-
-def parse() -> Namespace:
-
-    parser = ArgumentParser()
-
-    parser.add_argument('-d',
-                        '--database',
-                        '--db',
-                        dest='database',
-                        metavar='PATH',
-                        default='~/.sqlite')
-
-    return parser.parse_args()
+args: Namespace = parser.parse_args()
 
 
 def main():
 
-    initialise_pandas()
+    import sqlite3
+    from sqlite3 import Connection, Cursor
+    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+    from prompt_toolkit.history import InMemoryHistory
+    from prompt_toolkit.shortcuts import prompt
+    from .completer import MyCustomCompleter
+    from .styling import PygmentsLexer, SqlLexer, custom_style
 
-    args = parse()
-
-    connection: Connection = sqlite3.connect(args.database)
+    connection: Connection = sqlite3.connect(os.path.expanduser(args.database))
 
     # initialise variables
     user_input: str = ""
@@ -51,7 +43,7 @@ def main():
 
         # offer suggestions from history from history
         try:
-            user_input = prompt('SQLite >> ',
+            user_input: str = prompt('SQLite >> ',
                                 history=history,
                                 multiline=False,
                                 auto_suggest=AutoSuggestFromHistory(),
@@ -70,7 +62,7 @@ def main():
             print("An error occurred:", e.args[0])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # vim: ft=python

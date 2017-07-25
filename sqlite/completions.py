@@ -1,10 +1,9 @@
-
-from typing import List
+from typing import List, Set
 
 from prompt_toolkit.completion import Completion
 from prompt_toolkit.document import Document
 
-sql_keywords = {
+sql_keywords: Set[str] = {
     'ABORT',
     'ACTION',
     'ADD',
@@ -136,9 +135,9 @@ sql_keywords = {
     'WITH',
     'WITHOUT'}
 
-sql_tables = {'sqlite_master', 'table_info'}
+sql_tables: Set[str] = {'sqlite_master', 'table_info'}
 
-sql_dtypes = {
+sql_dtypes: Set[str] = {
     'TEXT',
     'INTEGER',
     'NULL',
@@ -146,7 +145,7 @@ sql_dtypes = {
     'REAL'
 }
 
-sql_numeric = {
+sql_numeric: Set[str] = {
     'NUMERIC'
     'DECIMAL(10,5)',
     'BOOLEAN',
@@ -154,7 +153,7 @@ sql_numeric = {
     'DATETIME'
 }
 
-sql_integer = {
+sql_integer: Set[str] = {
     'INT',
     'MEDIUMINT',
     'SMALLINT',
@@ -165,13 +164,13 @@ sql_integer = {
     'UNSIGNED BIG INT'
 }
 
-sql_real = {
+sql_real: Set[str] = {
     'DOUBLE',
     'FLOAT',
     'DOUBLE PRECISION'
 }
 
-sql_text = {
+sql_text: Set[str] = {
     'CHARACTER(20)',
     'CLOB',
     'NATIVE CHARACTER(70)',
@@ -181,7 +180,7 @@ sql_text = {
     'VARYING CHARACTER(255)',
 }
 
-sql_functions = {
+sql_functions: Set[str] = {
     'ABS(',
     'CHANGES(',
     'CHAR(',
