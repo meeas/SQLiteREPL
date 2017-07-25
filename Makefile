@@ -15,7 +15,7 @@ publish:
 
 push:
 	git add --update 
-	git commit -m 'Automaitc update.' 
+	git commit -m 'Automatic update.' 
 	git push origin dev
 
 dependencies:
