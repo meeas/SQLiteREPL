@@ -19,13 +19,12 @@ install:
 script:
     - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return sqlite/*.py
     - python -m unittest discover sqlite
-    - pip install --user git+https://github.com/nl253/SQLiteREPL.git@dev && sqlite
+    - pip install git+https://github.com/nl253/SQLiteREPL.git@dev && sqlite
 
 # blocklist
 branches:
     only:
         - dev
-        - master
 
 notifications:
     email: false
