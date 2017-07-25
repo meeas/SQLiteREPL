@@ -17,7 +17,7 @@ install:
 
 # command to run tests
 script:
-    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return sqlite/*.py
+    - mypy --python-version 3.6 --check-untyped-defs --warn-redundant-casts --strict-optional --inferstats --no-warn-no-return --package sqlite
     - python -m unittest discover sqlite
     - pip install git+https://github.com/nl253/SQLiteREPL.git@dev && sqlite
 
