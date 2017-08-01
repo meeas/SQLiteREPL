@@ -2,14 +2,6 @@
 SQLite Clinet written in python3
 #################################
 
-TODO
-----
-
-- [ ] Screenshots
-- [ ] Expand db.py
-- [ ] Test db.py
-
-
 Good completion
 ---------------
 
@@ -43,20 +35,18 @@ Good completion
 
 Limitations
 -----------
-
 - Not context sensitive,
 - doesn't complete table names
-- relies on pandas for displaying data
+- no table headings
 
 Dependencies
 ------------
-
 - `prompt-toolkit <https://github.com/jonathanslenders/python-prompt-toolkit>`__
-- `pandas <https://pandas.pydata.org/>`__
+- `tabulate`__
 - python3.6
 
 Related
 -------
 
-<https://github.com/dbcli/mycli>
+- <https://github.com/dbcli/mycli>
 
