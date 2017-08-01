@@ -2,12 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from argparse import ArgumentParser, Namespace
-import pandas
 import os
-
-pandas.reset_option('expand_frame_repr')
-pandas.set_option('max_colwidth', 160)
-pandas.set_option('max_rows', 9999)
+import tabulate
 
 parser: ArgumentParser = ArgumentParser()
 
@@ -56,7 +52,7 @@ def main():
 
         try:
             with connection:
-                print(pandas.DataFrame(list(connection.execute(user_input))))
+                print(tabulate.tabulate(list(connection.execute(user_input)), tablefmt="orgtbl"))
 
         except (sqlite3.Error, sqlite3.IntegrityError) as e:
             print("An error occurred:", e.args[0])
