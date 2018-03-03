@@ -230,7 +230,14 @@ sql_functions: Set[str] = {
     'UPPER(',
     'ZEROBLOB('}
 
+sql_meta: Set[str] = {
+    'exit',
+    '.tables',
+    '.quit',}
+
 def sql_completions(document: Document) -> List[Completion]:
+    meta = [Completion(i, start_position=document.find_boundaries_of_current_word(
+        WORD=True)[0], display_meta="META Command") for i in sql_meta]
     keywords = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="keyword") for i in sql_keywords]
     tables = [Completion(i, start_position=document.find_boundaries_of_current_word(
@@ -247,4 +254,4 @@ def sql_completions(document: Document) -> List[Completion]:
         WORD=True)[0], display_meta="real (alias)") for i in sql_real]
     integer = [Completion(i, start_position=document.find_boundaries_of_current_word(
         WORD=True)[0], display_meta="integer (alias)") for i in sql_integer]
-    return keywords + tables + functions + integer + numeric + real + text + dtypes
+    return meta + keywords + tables + functions + integer + numeric + real + text + dtypes
