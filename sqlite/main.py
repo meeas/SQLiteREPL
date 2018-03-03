@@ -7,11 +7,8 @@ import tabulate
 
 parser: ArgumentParser = ArgumentParser()
 
-parser.add_argument('-d',
-                    '--database',
-                    '--db',
-                    dest='database',
-                    metavar='PATH',
+parser.add_argument('database',
+                    help='path to database',
                     default='~/.sqlite')
 
 args: Namespace = parser.parse_args()
