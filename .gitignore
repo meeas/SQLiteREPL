@@ -1,2 +1,4 @@
 __pycache__/
 sqlite.egg-info/
+Pipfile
+Pipfile.lock
