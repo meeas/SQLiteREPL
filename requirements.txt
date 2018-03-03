@@ -1,4 +1,3 @@
-pandas
 prompt_toolkit
 tabulate
 pygments

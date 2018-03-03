@@ -61,7 +61,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
 
-    install_requires=['pandas', 'prompt_toolkit'],
+    install_requires=['prompt_toolkit', 'tabulate', 'pygments'],
 
     entry_points={
         'console_scripts': ['sqlite = sqlite.main:main']
