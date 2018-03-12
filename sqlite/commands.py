@@ -1,5 +1,3 @@
-import sys
-
 def meta_command(connection, user_input):
     """Swap sqlite3 meta commands with equivelant SQL queries"""
     user_parts = user_input.split()

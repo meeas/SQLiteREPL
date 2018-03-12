@@ -3,7 +3,7 @@
 
 from argparse import ArgumentParser, Namespace
 import os
-import tabulate
+from tabulate import tabulate
 
 parser: ArgumentParser = ArgumentParser()
 
@@ -57,7 +57,7 @@ def main():
 
         try:
             with connection:
-                print(tabulate.tabulate(list(connection.execute(user_input)), tablefmt="presto"))
+                print(tabulate(list(connection.execute(user_input)), tablefmt="presto"))
 
         except (sqlite3.Error, sqlite3.IntegrityError) as e:
             print("An error occurred:", e.args[0])
