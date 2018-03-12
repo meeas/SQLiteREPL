@@ -2,3 +2,4 @@ __pycache__/
 sqlite.egg-info/
 Pipfile
 Pipfile.lock
+.DS_Store

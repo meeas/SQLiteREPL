@@ -232,6 +232,8 @@ sql_functions: Set[str] = {
 
 sql_meta: Set[str] = {
     'exit',
+    '.dump',
+    '.schema',
     '.tables',
     '.quit',}
 

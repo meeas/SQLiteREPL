@@ -23,6 +23,7 @@ def main():
     from prompt_toolkit.shortcuts import prompt
     from .completer import MyCustomCompleter
     from .styling import PygmentsLexer, SqlLexer, custom_style
+    from .commands import meta_command
 
     connection: Connection = sqlite3.connect(os.path.expanduser(args.database))
 
@@ -47,14 +48,16 @@ def main():
         except (EOFError, KeyboardInterrupt) as e:
             break
 
-        if user_input.lower() == '.quit' or user_input.lower() == 'exit':
+        # Check for attempts to exit REPL
+        if user_input.strip().lower() == '.quit' or user_input.lower() == 'exit':
             break
-        elif user_input.lower() == '.tables':
-            user_input = 'select name from sqlite_master where type = "table";'
+        # Check for meta command from sqlite3 and handle basic ones
+        elif user_input.strip()[:1] == '.':
+            user_input = meta_command(connection, user_input)
 
         try:
             with connection:
-                print(tabulate.tabulate(list(connection.execute(user_input)), tablefmt="orgtbl"))
+                print(tabulate.tabulate(list(connection.execute(user_input)), tablefmt="presto"))
 
         except (sqlite3.Error, sqlite3.IntegrityError) as e:
             print("An error occurred:", e.args[0])
